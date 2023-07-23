@@ -1,8 +1,4 @@
 package com.contrerastorrez.entitys;
-
-import javax.swing.*;
-import java.text.DecimalFormat;
-
 public class Conversion {
    public static final String [] TIPOS = {"MONEDAS","TEMPERATURA"};
    public static final String [] MONEDAS = {"DOP","USD","EUR","JPY","KRW"};

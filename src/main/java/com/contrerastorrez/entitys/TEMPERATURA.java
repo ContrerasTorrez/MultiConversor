@@ -25,7 +25,7 @@ public enum TEMPERATURA {
         public double to(String type, double value) {
             double result = 0;
             if (type.equals("F"))
-                result = (value - 273.15) * (9/5) + 32;
+                result = (value - 273.15) * 9/5 + 32;
             else if (type.equals("C"))
                 result = value - 273.15;
             return result;
