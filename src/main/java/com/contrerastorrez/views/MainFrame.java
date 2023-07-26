@@ -5,6 +5,10 @@ import com.contrerastorrez.entitys.MONEDAS;
 import com.contrerastorrez.entitys.TEMPERATURA;
 
 import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import java.awt.event.*;
 import java.text.DecimalFormat;
 
@@ -27,17 +31,7 @@ public class MainFrame extends JFrame {
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setIconImage(new ImageIcon("src/main/resources/arrows.png").getImage());
         // TEXTFIELD
-        tfValue.addKeyListener(new KeyAdapter() {
-            public void keyPressed(KeyEvent ke) {
-                String value = tfValue.getText();
-                int l = value.length();
-                if (ke.getKeyChar() >= '0' && ke.getKeyChar() <= '9') {
-                    tfValue.setEditable(true);
-                } else {
-                    tfValue.setEditable(false);
-                }
-            }
-        });
+        ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new NumerosOnlyFilter());
 
         // COMBOBOX
 
@@ -93,5 +87,32 @@ public class MainFrame extends JFrame {
 
     public void addValuesToComboBox(JComboBox cb, String[] values){
         cb.setModel(new DefaultComboBoxModel<>(values));
+    }
+}
+class NumerosOnlyFilter extends DocumentFilter {
+    @Override
+    public void insertString(FilterBypass fb, int offset, String str, AttributeSet attr) throws BadLocationException {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (Character.isDigit(ch)) {
+                sb.append(ch);
+            }
+        }
+        super.insertString(fb, offset, sb.toString(), attr);
+    }
+    @Override
+    public void replace(FilterBypass fb, int offset, int length, String str, AttributeSet attrs) throws BadLocationException {
+        if (str == null) {
+            return;
+        }
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < str.length(); i++) {
+            char ch = str.charAt(i);
+            if (Character.isDigit(ch)) {
+                sb.append(ch);
+            }
+        }
+        super.replace(fb, offset, length, sb.toString(), attrs);
     }
 }
