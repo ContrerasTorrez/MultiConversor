@@ -1,6 +1,6 @@
 package com.contrerastorrez.entitys;
 
-public enum TEMPERATURA {
+public enum Temperatura {
     F {
         public double to(String type,double value){
             double result = 0;

@@ -1,8 +1,8 @@
 package com.contrerastorrez.views;
 
-import com.contrerastorrez.entitys.Conversion;
-import com.contrerastorrez.entitys.MONEDAS;
-import com.contrerastorrez.entitys.TEMPERATURA;
+import com.contrerastorrez.entitys.Conversiones;
+import com.contrerastorrez.entitys.Monedas;
+import com.contrerastorrez.entitys.Temperatura;
 
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
@@ -30,28 +30,28 @@ public class MainFrame extends JFrame {
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setIconImage(new ImageIcon("src/main/resources/arrows.png").getImage());
-        // TEXTFIELD
+
+        // JTEXTFIELD
         ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new NumerosOnlyFilter());
 
-        // COMBOBOX
-
-        this.addValuesToComboBox(cbConvertionType, Conversion.TIPOS);
-        this.addValuesToComboBox(cbFrom, Conversion.MONEDAS);// MONEDA ES EL VALOR POR DEFECTO
-        this.addValuesToComboBox(cbTo, Conversion.MONEDAS);
+        // JCOMBOBOX
+        this.addValuesToComboBox(cbConvertionType, Conversiones.TIPOS);
+        this.addValuesToComboBox(cbFrom, Conversiones.MONEDAS);// MONEDA ES EL VALOR POR DEFECTO
+        this.addValuesToComboBox(cbTo, Conversiones.MONEDAS);
         cbConvertionType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(cbConvertionType.getSelectedItem().equals("TEMPERATURA")){
-                    addValuesToComboBox(cbFrom, Conversion.TEMPERATURA);
-                    addValuesToComboBox(cbTo, Conversion.TEMPERATURA);
+                if(cbConvertionType.getSelectedItem().equals("Temperatura")){
+                    addValuesToComboBox(cbFrom, Conversiones.TEMPERATURA);
+                    addValuesToComboBox(cbTo, Conversiones.TEMPERATURA);
                 }
 //                else if (cbConvertionType.getSelectedItem().equals("LONGITUDES")){
-//                    addValuesToComboBox(cbFrom, Conversion.LONGITUDES);
-//                    addValuesToComboBox(cbTo, Conversion.LONGITUDES);
+//                    addValuesToComboBox(cbFrom, Conversiones.LONGITUDES);
+//                    addValuesToComboBox(cbTo, Conversiones.LONGITUDES);
 //                }
                 else {
-                    addValuesToComboBox(cbFrom, Conversion.MONEDAS);
-                    addValuesToComboBox(cbTo, Conversion.MONEDAS);
+                    addValuesToComboBox(cbFrom, Conversiones.MONEDAS);
+                    addValuesToComboBox(cbTo, Conversiones.MONEDAS);
                 }
             }
         });
@@ -67,13 +67,14 @@ public class MainFrame extends JFrame {
                 double valueTo = 0;
                 double result = 0;
 
-                if(typeConvertion.equals("MONEDAS")){
-                    valueFrom = MONEDAS.valueOf(typeFrom).getValue();
-                    valueTo = MONEDAS.valueOf(typeTo).getValue();
-                    result = MONEDAS.getResult(valueFrom, valueTo, valueInserted);
+                if(typeConvertion.equals("Monedas")){
+                    valueFrom = Monedas.valueOf(typeFrom).getValue();
+                    valueTo = Monedas.valueOf(typeTo).getValue();
+                    result = Monedas.getResult(valueFrom, valueTo, valueInserted);
                 }
-                else if(typeConvertion.equals("TEMPERATURA")){
-                    result = TEMPERATURA.valueOf(typeFrom).to(typeTo, valueInserted) ;
+
+                else if(typeConvertion.equals("Temperatura")){
+                    result = Temperatura.valueOf(typeFrom).to(typeTo, valueInserted) ;
                 }
 
                 DecimalFormat df = new DecimalFormat("#,###.###");

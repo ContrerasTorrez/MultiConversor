@@ -1,8 +1,6 @@
 package com.contrerastorrez.entitys;
 
-import java.text.DecimalFormat;
-
-public enum MONEDAS {
+public enum Monedas {
     DOP (0.017836379),
     USD(1.0),
     EUR(1.1131816),
@@ -10,7 +8,7 @@ public enum MONEDAS {
     KRW(0.00077717734);
 
     private final double value;
-    MONEDAS(double value){
+    Monedas(double value){
         this.value = value;
     }
     public double getValue(){
@@ -18,7 +16,7 @@ public enum MONEDAS {
     }
     public static double getResult(double valueFrom, double valueTo, double coinsFrom){
         double result = 0;
-        // FORMULA DE CONVERSION Y FORMAT (MONEDAS)
+        // FORMULA DE CONVERSION Y FORMAT (Monedas)
         result = (coinsFrom * valueFrom) / valueTo;
         return result;
     }
