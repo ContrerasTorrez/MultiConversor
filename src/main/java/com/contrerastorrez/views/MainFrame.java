@@ -25,7 +25,7 @@ public class MainFrame extends JFrame {
         this.setSize(420,145);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setIconImage(new ImageIcon("src/main/resources/arrows.png").getImage());
+        this.setIconImage(new ImageIcon("assets/arrows.png").getImage());
         // JTEXTFIELD
         ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
         ((AbstractDocument) tfValueSecond.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
