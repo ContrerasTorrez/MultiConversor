@@ -1,23 +1,29 @@
 package com.contrerastorrez.entitys;
 
-public enum Monedas {
-    DOP (0.017836379),
-    USD(1.0),
-    EUR(1.1131816),
-    JPY(0.007052705),
-    KRW(0.00077717734);
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
-    private final double value;
-    Monedas(double value){
-        this.value = value;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class Monedas {
+    public static final String [] MONEDAS = {"DOP","USD","EUR","JPY","KRW"};
+    public double convertir(String from, String to, double amount) throws MalformedURLException, IOException {
+        String url_str = "https://api.exchangerate.host/convert?from="+ from +"&to="+ to + "&amount=" + amount;
+        URL url = new URL(url_str);
+        HttpURLConnection request = (HttpURLConnection) url.openConnection();
+        request.connect();
+        JsonParser jp = new JsonParser();
+        JsonElement root = jp.parse(new InputStreamReader((InputStream) request.getContent()));
+        JsonObject jsonobj = root.getAsJsonObject();
+        String req_result = jsonobj.get("result").getAsString();
+        request.disconnect();
+        return Double.parseDouble(req_result);
     }
-    public double getValue(){
-        return this.value;
-    }
-    public static double getResult(double valueFrom, double valueTo, double coinsFrom){
-        double result = 0;
-        // FORMULA DE CONVERSION Y FORMAT (Monedas)
-        result = (coinsFrom * valueFrom) / valueTo;
-        return result;
-    }
+
 }

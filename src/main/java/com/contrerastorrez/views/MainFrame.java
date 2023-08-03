@@ -3,7 +3,6 @@ package com.contrerastorrez.views;
 import com.contrerastorrez.entitys.Conversiones;
 import com.contrerastorrez.entitys.Monedas;
 import com.contrerastorrez.entitys.Temperatura;
-
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.AttributeSet;
@@ -11,33 +10,29 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.event.*;
 import java.text.DecimalFormat;
-
-
 public class MainFrame extends JFrame {
     private JComboBox cbConvertionType;
     private JComboBox cbFrom;
     private JComboBox cbTo;
     private JPanel mainPanel;
-    private JLabel lblTo;
     private JTextField tfValue;
-    private JButton btnConvertir;
+    private JTextField tfValueSecond;
 
     public MainFrame(){
         // FRAME
         this.setContentPane(mainPanel);
         this.setTitle("Bienvenido");
-        this.setSize(505,145);
+        this.setSize(420,145);
         this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setIconImage(new ImageIcon("src/main/resources/arrows.png").getImage());
-
         // JTEXTFIELD
-        ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new NumerosOnlyFilter());
-
+        ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
+        ((AbstractDocument) tfValueSecond.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
         // JCOMBOBOX
         this.addValuesToComboBox(cbConvertionType, Conversiones.TIPOS);
-        this.addValuesToComboBox(cbFrom, Conversiones.MONEDAS);// MONEDA ES EL VALOR POR DEFECTO
-        this.addValuesToComboBox(cbTo, Conversiones.MONEDAS);
+        this.addValuesToComboBox(cbFrom, Monedas.MONEDAS);
+        this.addValuesToComboBox(cbTo, Monedas.MONEDAS);
         cbConvertionType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -45,43 +40,50 @@ public class MainFrame extends JFrame {
                     addValuesToComboBox(cbFrom, Conversiones.TEMPERATURA);
                     addValuesToComboBox(cbTo, Conversiones.TEMPERATURA);
                 }
-//                else if (cbConvertionType.getSelectedItem().equals("LONGITUDES")){
-//                    addValuesToComboBox(cbFrom, Conversiones.LONGITUDES);
-//                    addValuesToComboBox(cbTo, Conversiones.LONGITUDES);
-//                }
                 else {
-                    addValuesToComboBox(cbFrom, Conversiones.MONEDAS);
-                    addValuesToComboBox(cbTo, Conversiones.MONEDAS);
+                    addValuesToComboBox(cbFrom, Monedas.MONEDAS);
+                    addValuesToComboBox(cbTo, Monedas.MONEDAS);
                 }
             }
         });
-        btnConvertir.addMouseListener(new MouseAdapter() {
+
+
+        tfValue.addKeyListener(new KeyAdapter() {
+        });
+        tfValue.addActionListener(new ActionListener() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-
-                String typeConvertion = cbConvertionType.getSelectedItem().toString();
-                String typeFrom = cbFrom.getSelectedItem().toString();
-                String typeTo = cbTo.getSelectedItem().toString();
-                double valueInserted = Double.parseDouble(tfValue.getText());
-                double valueFrom = 0;
-                double valueTo = 0;
-                double result = 0;
-
-                if(typeConvertion.equals("Monedas")){
-                    valueFrom = Monedas.valueOf(typeFrom).getValue();
-                    valueTo = Monedas.valueOf(typeTo).getValue();
-                    result = Monedas.getResult(valueFrom, valueTo, valueInserted);
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(tfValue.getText());
+            }
+        });
+        tfValue.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyTyped(e);
+                String numText = tfValue.getText();
+                double value = Double.parseDouble(numText);
+                String newValue = "";
+                try{
+                    newValue += new Monedas().convertir(cbFrom.getSelectedItem().toString(),cbTo.getSelectedItem().toString(), value);
+                }catch (Exception ex){
+                    ex.printStackTrace();
                 }
-
-                else if(typeConvertion.equals("Temperatura")){
-                    result = Temperatura.valueOf(typeFrom).to(typeTo, valueInserted) ;
+                tfValueSecond.setText(newValue);
+            }
+        });
+        tfValueSecond.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+                String numText = tfValueSecond.getText();
+                double value = Double.parseDouble(numText);
+                String newValue = "";
+                try{
+                    newValue += new Monedas().convertir(cbTo.getSelectedItem().toString(),cbFrom.getSelectedItem().toString(), value);
+                }catch (Exception ex){
+                    ex.printStackTrace();
                 }
-
-                DecimalFormat df = new DecimalFormat("#,###.###");
-
-                JOptionPane.showMessageDialog(null,typeFrom + " A " + typeTo
-                        + " : " + df.format(result),"RESULTADO",1);
-
+                tfValue.setText(newValue);
             }
         });
     }
@@ -89,31 +91,53 @@ public class MainFrame extends JFrame {
     public void addValuesToComboBox(JComboBox cb, String[] values){
         cb.setModel(new DefaultComboBoxModel<>(values));
     }
-}
-class NumerosOnlyFilter extends DocumentFilter {
-    @Override
-    public void insertString(FilterBypass fb, int offset, String str, AttributeSet attr) throws BadLocationException {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-            if (Character.isDigit(ch)) {
-                sb.append(ch);
-            }
+    public void convertirAction () {
+        String typeConvertion = cbConvertionType.getSelectedItem().toString();
+        String typeFrom = cbFrom.getSelectedItem().toString();
+        String typeTo = cbTo.getSelectedItem().toString();
+        double valueInserted = Double.parseDouble(tfValue.getText());
+        double valueFrom = 0;
+        double valueTo = 0;
+        double result = 0;
+        if(typeConvertion.equals("Monedas")){
+//            result = new Monedas().convertir(typeFrom,typeTo, 10);
         }
-        super.insertString(fb, offset, sb.toString(), attr);
+        else if(typeConvertion.equals("Temperatura")){
+            result = Temperatura.valueOf(typeFrom).to(typeTo, valueInserted) ;
+        }
+
+
     }
+}
+class DoubleOnlyFilter extends DocumentFilter {
     @Override
-    public void replace(FilterBypass fb, int offset, int length, String str, AttributeSet attrs) throws BadLocationException {
-        if (str == null) {
-            return;
-        }
+    public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char ch = str.charAt(i);
-            if (Character.isDigit(ch)) {
-                sb.append(ch);
-            }
+        sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+        sb.insert(offset, text);
+
+        if (isDouble(sb.toString())) {
+            super.insertString(fb, offset, text, attr);
         }
-        super.replace(fb, offset, length, sb.toString(), attrs);
+    }
+
+    @Override
+    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attr) throws BadLocationException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(fb.getDocument().getText(0, fb.getDocument().getLength()));
+        sb.replace(offset, offset + length, text);
+
+        if (isDouble(sb.toString())) {
+            super.replace(fb, offset, length, text, attr);
+        }
+    }
+
+    private boolean isDouble(String str) {
+        try {
+            Double.parseDouble(str);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
     }
 }
