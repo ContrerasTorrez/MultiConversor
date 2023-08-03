@@ -32,7 +32,7 @@
         </constraints>
         <properties/>
       </component>
-      <component id="dac9" class="javax.swing.JComboBox" binding="cbFrom">
+      <component id="dac9" class="javax.swing.JComboBox" binding="cb1">
         <constraints>
           <grid row="3" column="4" row-span="7" col-span="3" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -54,7 +54,7 @@
           <text value="MONEDA"/>
         </properties>
       </component>
-      <component id="2cdce" class="javax.swing.JComboBox" binding="cbTo">
+      <component id="2cdce" class="javax.swing.JComboBox" binding="cb2">
         <constraints>
           <grid row="3" column="12" row-span="7" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>

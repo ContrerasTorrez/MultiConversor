@@ -1,35 +1,33 @@
 package com.contrerastorrez.entitys;
 
-public enum Temperatura {
-    F {
-        public double to(String type,double value){
+public class Temperatura {
+    public static final String [] TEMPERATURA = {"C","F","K"};
+    public double convertFahrenheit(String to,double value){
             double result = 0;
-            if(type.equals("C"))
+            if(to.equals("C"))
                 result = (value - 32) * 5/9;
-            else if(type.equals("K"))
+            else if(to.equals("K"))
                 result = (value - 32) * 5/9 + 273.15;
             return result;
         }
-    },
-    C {
-        public double to(String type,double value){
+
+    public double convertCelsius(String to,double value){
             double result = 0;
-            if(type.equals("F"))
+            if(to.equals("F"))
                 result =  (value * 9/5) + 32;
-            else if(type.equals("K"))
+            else if(to.equals("K"))
                 result = value + 273.15;
             return result;
         }
-    },
-    K {
-        public double to(String type, double value) {
+
+    public double convertKelvin (String to, double value) {
             double result = 0;
-            if (type.equals("F"))
+            if (to.equals("F"))
                 result = (value - 273.15) * 9/5 + 32;
-            else if (type.equals("C"))
+            else if (to.equals("C"))
                 result = value - 273.15;
             return result;
         }
-    };
-    public abstract double to(String type,double value);
-}
+    }
+
+

@@ -1,6 +1,4 @@
 package com.contrerastorrez.views;
-
-import com.contrerastorrez.entitys.Conversiones;
 import com.contrerastorrez.entitys.Monedas;
 import com.contrerastorrez.entitys.Temperatura;
 import javax.swing.*;
@@ -9,11 +7,12 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.DocumentFilter;
 import java.awt.event.*;
-import java.text.DecimalFormat;
+
 public class MainFrame extends JFrame {
+    public static final String [] TIPOS = {"MONEDA","TEMPERATURA"};
     private JComboBox cbConvertionType;
-    private JComboBox cbFrom;
-    private JComboBox cbTo;
+    private JComboBox cb1;
+    private JComboBox cb2;
     private JPanel mainPanel;
     private JTextField tfValue;
     private JTextField tfValueSecond;
@@ -23,26 +22,26 @@ public class MainFrame extends JFrame {
         this.setContentPane(mainPanel);
         this.setTitle("Bienvenido");
         this.setSize(420,145);
-        this.setResizable(false);
+//        this.setResizable(false);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setIconImage(new ImageIcon("assets/arrows.png").getImage());
         // JTEXTFIELD
         ((AbstractDocument) tfValue.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
         ((AbstractDocument) tfValueSecond.getDocument()).setDocumentFilter(new DoubleOnlyFilter());
         // JCOMBOBOX
-        this.addValuesToComboBox(cbConvertionType, Conversiones.TIPOS);
-        this.addValuesToComboBox(cbFrom, Monedas.MONEDAS);
-        this.addValuesToComboBox(cbTo, Monedas.MONEDAS);
+        this.addValuesToComboBox(cbConvertionType, TIPOS);
+        this.addValuesToComboBox(cb1, Monedas.MONEDAS);
+        this.addValuesToComboBox(cb2, Monedas.MONEDAS);
         cbConvertionType.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if(cbConvertionType.getSelectedItem().equals("Temperatura")){
-                    addValuesToComboBox(cbFrom, Conversiones.TEMPERATURA);
-                    addValuesToComboBox(cbTo, Conversiones.TEMPERATURA);
+                if(cbConvertionType.getSelectedItem().equals("TEMPERATURA")){
+                    addValuesToComboBox(cb1, Temperatura.TEMPERATURA);
+                    addValuesToComboBox(cb2, Temperatura.TEMPERATURA);
                 }
                 else {
-                    addValuesToComboBox(cbFrom, Monedas.MONEDAS);
-                    addValuesToComboBox(cbTo, Monedas.MONEDAS);
+                    addValuesToComboBox(cb1, Monedas.MONEDAS);
+                    addValuesToComboBox(cb2, Monedas.MONEDAS);
                 }
             }
         });
@@ -59,14 +58,28 @@ public class MainFrame extends JFrame {
         tfValue.addKeyListener(new KeyAdapter() {
             @Override
             public void keyReleased(KeyEvent e) {
-                super.keyTyped(e);
-                String numText = tfValue.getText();
-                double value = Double.parseDouble(numText);
+
+                double doubleText = Double.parseDouble( tfValue.getText());
+                String from = cb1.getSelectedItem().toString();
+
+                String to = cb2.getSelectedItem().toString();
+
                 String newValue = "";
-                try{
-                    newValue += new Monedas().convertir(cbFrom.getSelectedItem().toString(),cbTo.getSelectedItem().toString(), value);
-                }catch (Exception ex){
-                    ex.printStackTrace();
+
+                if(cbConvertionType.getSelectedItem().toString().equals("MONEDA")) {
+                    try{
+                        newValue += new Monedas().convertir(from, to, doubleText);
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }else{
+                    if(from.equals("C")){
+                        newValue +=  new Temperatura().convertCelsius(to,doubleText);
+                    } else if (from.equals("F")) {
+                        newValue += new Temperatura().convertFahrenheit(to,doubleText);
+                    }else {
+                        newValue += new Temperatura().convertKelvin(to,doubleText);
+                    }
                 }
                 tfValueSecond.setText(newValue);
             }
@@ -75,15 +88,28 @@ public class MainFrame extends JFrame {
             @Override
             public void keyReleased(KeyEvent e) {
                 super.keyReleased(e);
-                String numText = tfValueSecond.getText();
-                double value = Double.parseDouble(numText);
+                double doubleText = Double.parseDouble( tfValueSecond.getText());
+                String from = cb2.getSelectedItem().toString();
+                String to = cb1.getSelectedItem().toString();
                 String newValue = "";
-                try{
-                    newValue += new Monedas().convertir(cbTo.getSelectedItem().toString(),cbFrom.getSelectedItem().toString(), value);
-                }catch (Exception ex){
-                    ex.printStackTrace();
+
+                if(cbConvertionType.getSelectedItem().toString().equals("MONEDA")) {
+                    try{
+                        newValue += new Monedas().convertir(from, to, doubleText);
+                    }catch (Exception ex){
+                        ex.printStackTrace();
+                    }
+                }else{
+                    if(from.equals("C")){
+                        newValue +=  new Temperatura().convertCelsius(to,doubleText);
+                    } else if (from.equals("F")) {
+                        newValue += new Temperatura().convertFahrenheit(to,doubleText);
+                    }else {
+                        newValue += new Temperatura().convertKelvin(to,doubleText);
+                    }
                 }
                 tfValue.setText(newValue);
+
             }
         });
     }
@@ -91,24 +117,8 @@ public class MainFrame extends JFrame {
     public void addValuesToComboBox(JComboBox cb, String[] values){
         cb.setModel(new DefaultComboBoxModel<>(values));
     }
-    public void convertirAction () {
-        String typeConvertion = cbConvertionType.getSelectedItem().toString();
-        String typeFrom = cbFrom.getSelectedItem().toString();
-        String typeTo = cbTo.getSelectedItem().toString();
-        double valueInserted = Double.parseDouble(tfValue.getText());
-        double valueFrom = 0;
-        double valueTo = 0;
-        double result = 0;
-        if(typeConvertion.equals("Monedas")){
-//            result = new Monedas().convertir(typeFrom,typeTo, 10);
-        }
-        else if(typeConvertion.equals("Temperatura")){
-            result = Temperatura.valueOf(typeFrom).to(typeTo, valueInserted) ;
-        }
-
-
-    }
 }
+
 class DoubleOnlyFilter extends DocumentFilter {
     @Override
     public void insertString(FilterBypass fb, int offset, String text, AttributeSet attr) throws BadLocationException {
