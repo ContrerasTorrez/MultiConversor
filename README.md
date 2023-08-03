@@ -16,13 +16,17 @@ para la conversion de las monedas este proyecto usa la API https://exchangerate.
 
 
   1. En el campo "CONVERSION" seleccione la opcion "MONEDAS" o "TEMPERATURA" dependiendo de lo que necesites convertir.
+
      ![conversion](assets/session-conversion.png)
   2. seleccione la moneda de origen y la moneda de destino en los menús desplegables correspondientes.
+
      ![moneda](assets/session-moneda.png)
   3. Ingrese la cantidad en cualquiera de los campos "CANTIDAD".
+
      ![cantidad](assets/session-cantidad.png)
   4. el resultado se reflejará automaticamente en los mismos campos de cantidad correspiente.
-       ![resultadp](assets/session-result.png)
+
+     ![resultadp](assets/session-result.png)
 
 ### Estructura del proyecto: 
     MultiConversor/
